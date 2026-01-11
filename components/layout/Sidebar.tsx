@@ -22,17 +22,17 @@ const Sidebar: React.FC = () => {
   return (
     <aside className={`${isOpen ? 'w-64' : 'w-20'} bg-primary-900 text-white transition-all duration-300 flex flex-col`}>
       {/* Logo */}
-      <div className=\"p-4 border-b border-primary-800\">
-        <div className=\"flex items-center justify-between\">
+      <div className="p-4 border-b border-primary-800">
+        <div className="flex items-center justify-between">
           {isOpen && (
-            <div className=\"flex items-center gap-2\">
-              <div className=\"w-8 h-8 bg-accent-500 rounded-lg flex items-center justify-center font-bold\">Ω</div>
-              <span className=\"font-bold text-sm\">GBD</span>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-accent-500 rounded-lg flex items-center justify-center font-bold">Ω</div>
+              <span className="font-bold text-sm">GBD</span>
             </div>
           )}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className=\"p-1 hover:bg-primary-800 rounded transition-colors\"
+            className="p-1 hover:bg-primary-800 rounded transition-colors"
           >
             {isOpen ? '←' : '→'}
           </button>
@@ -40,7 +40,7 @@ const Sidebar: React.FC = () => {
       </div>
 
       {/* Navigation */}
-      <nav className=\"flex-1 px-2 py-4 space-y-2 overflow-y-auto\">
+      <nav className="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
         {menuItems.map((item) => (
           <Link
             key={item.href}
@@ -51,17 +51,17 @@ const Sidebar: React.FC = () => {
                 : 'text-gray-300 hover:bg-primary-800'
             }`}
           >
-            <span className=\"text-lg\">{item.icon}</span>
-            {isOpen && <span className=\"text-sm font-medium\">{item.label}</span>}
+            <span className="text-lg">{item.icon}</span>
+            {isOpen && <span className="text-sm font-medium">{item.label}</span>}
           </Link>
         ))}
       </nav>
 
       {/* Footer */}
-      <div className=\"p-4 border-t border-primary-800\">
+      <div className="p-4 border-t border-primary-800">
         {isOpen && (
-          <div className=\"text-xs text-gray-400\">
-            <p className=\"font-semibold text-white mb-2\">Greek Banks</p>
+          <div className="text-xs text-gray-400">
+            <p className="font-semibold text-white mb-2">Greek Banks</p>
             <p>Debt Dashboard v1.0</p>
           </div>
         )}

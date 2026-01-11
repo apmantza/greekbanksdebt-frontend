@@ -40,7 +40,7 @@ const Podium: React.FC<PodiumProps> = ({
   return (
     <div className={`flex flex-col items-center ${positions[rank]}`}>
       {/* Medal */}
-      <div className=\"text-6xl mb-2 animate-bounce\" style={{
+      <div className="text-6xl mb-2 animate-bounce" style={{
         animationDelay: `${rank * 0.1}s`,
       }}>
         {medals[rank]}
@@ -52,23 +52,23 @@ const Podium: React.FC<PodiumProps> = ({
         style={{ height }}
       >
         {/* Content */}
-        <div className=\"text-center pb-4 px-4\">
-          <p className=\"text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1\">
+        <div className="text-center pb-4 px-4">
+          <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">
             {title}
           </p>
-          <p className=\"text-lg font-bold text-primary-900 mb-1\">{winner}</p>
-          <div className=\"flex items-baseline justify-center gap-1\">
-            <span className=\"text-2xl font-bold text-accent-600\">{value}</span>
-            <span className=\"text-sm text-gray-600\">{unit}</span>
+          <p className="text-lg font-bold text-primary-900 mb-1">{winner}</p>
+          <div className="flex items-baseline justify-center gap-1">
+            <span className="text-2xl font-bold text-accent-600">{value}</span>
+            <span className="text-sm text-gray-600">{unit}</span>
           </div>
-          {subtitle && <p className=\"text-xs text-gray-500 mt-2\">{subtitle}</p>}
+          {subtitle && <p className="text-xs text-gray-500 mt-2">{subtitle}</p>}
         </div>
       </div>
 
       {/* Witty Comment */}
-      <div className=\"mt-3 text-center\">
-        <p className=\"text-xs italic text-gray-600 max-w-xs\">
-          \"{wittyComment}\"
+      <div className="mt-3 text-center">
+        <p className="text-xs italic text-gray-600 max-w-xs">
+          "{wittyComment}"
         </p>
       </div>
     </div>

@@ -23,10 +23,10 @@ const KPICard: React.FC<KPICardProps> = ({ label, value, change, trend }) => {
   }[trend]
 
   return (
-    <div className=\"card\">
-      <div className=\"card-body\">
-        <p className=\"text-sm text-gray-600 font-medium\">{label}</p>
-        <p className=\"text-2xl font-bold text-primary-900 mt-2\">{value}</p>
+    <div className="card">
+      <div className="card-body">
+        <p className="text-sm text-gray-600 font-medium">{label}</p>
+        <p className="text-2xl font-bold text-primary-900 mt-2">{value}</p>
         <p className={`text-sm mt-2 ${trendColor}`}>
           <span>{trendIcon}</span> {change}
         </p>
