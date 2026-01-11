@@ -234,10 +234,10 @@ const DashboardPage: React.FC = () => {
 
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ChartCard title="Issuance by Issuer" />
-        <ChartCard title="Spread Distribution" />
-        <ChartCard title="Issuance Trend" />
-        <ChartCard title="Issue Type Breakdown" />
+        <ChartCard title="Issuance by Issuer" type="bar" />
+        <ChartCard title="Spread Distribution" type="histogram" />
+        <ChartCard title="Issuance Trend" type="line" />
+        <ChartCard title="Issue Type Breakdown" type="pie" />
       </div>
 
       {/* Recent Activity */}
