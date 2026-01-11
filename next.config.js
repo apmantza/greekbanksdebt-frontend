@@ -1,1 +1,10 @@
-/** @type {import('next').NextConfig} */\nconst nextConfig = {\n  reactStrictMode: true,\n  swcMinify: true,\n  images: {\n    unoptimized: true,\n  },\n  typescript: {\n    tsconfigPath: './tsconfig.json',\n  },\n}\n\nmodule.exports = nextConfig\n
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
+  images: {
+    unoptimized: true,
+  },
+}
+
+module.exports = nextConfig
