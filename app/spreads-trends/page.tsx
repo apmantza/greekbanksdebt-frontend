@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import ScatterChartComponent from '@/components/cards/ScatterChart'
+import FilterPanel from '@/components/cards/FilterPanel'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts'
 
 const SpreadsTrendsPage: React.FC = () => {
@@ -72,6 +73,9 @@ const SpreadsTrendsPage: React.FC = () => {
           <h1 className="text-4xl font-bold text-gray-900 mb-2">📈 Spreads & Trends Analysis</h1>
           <p className="text-gray-600">Detailed analysis of spreads, coupons, tenors, and market trends</p>
         </div>
+
+        {/* Filter Panel */}
+        <FilterPanel />
 
         {/* Scatter Plots Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell, LineChart, Line, ScatterChart, Scatter } from 'recharts'
 import HeatmapChart from '@/components/cards/HeatmapChart'
+import FilterPanel from '@/components/cards/FilterPanel'
 
 const AdvancedAnalyticsPage: React.FC = () => {
   const [spreadMomentum, setSpreadMomentum] = useState<any[]>([])
@@ -156,6 +157,9 @@ const AdvancedAnalyticsPage: React.FC = () => {
           <h1 className="text-4xl font-bold text-gray-900 mb-2">🔬 Advanced Analytics & Forecasts</h1>
           <p className="text-gray-600">Deep-dive analysis including momentum, forecasts, and term structure</p>
         </div>
+
+        {/* Filter Panel */}
+        <FilterPanel />
 
         {/* Spread Momentum Analysis */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">

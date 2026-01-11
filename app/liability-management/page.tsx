@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell, LineChart, Line } from 'recharts'
+import FilterPanel from '@/components/cards/FilterPanel'
 
 const LiabilityManagementPage: React.FC = () => {
   const [callableByYear, setCallableByYear] = useState<any[]>([])
@@ -97,6 +98,9 @@ const LiabilityManagementPage: React.FC = () => {
           <h1 className="text-4xl font-bold text-gray-900 mb-2">🏦 Liability Management</h1>
           <p className="text-gray-600">Callable debt analysis, maturity ladder, and refinancing needs</p>
         </div>
+
+        {/* Filter Panel */}
+        <FilterPanel />
 
         {/* Key Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
