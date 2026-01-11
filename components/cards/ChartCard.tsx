@@ -28,7 +28,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, type }) => {
 
           const issuerMap: { [key: string]: number } = {}
           bonds.forEach((bond: any) => {
-            const issuer = bond.issuer_name || 'Unknown'
+            const issuer = bond.issuer?.name || bond.issuer_name || 'Unknown'
             issuerMap[issuer] = (issuerMap[issuer] || 0) + bond.size
           })
 
