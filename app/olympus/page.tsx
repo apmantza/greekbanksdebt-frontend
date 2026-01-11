@@ -10,9 +10,9 @@ const MountOlympusPage: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://greekbanksdebt-api.onrender.com/api/bonds/?limit=1000')
+        const response = await fetch('https://greekbanksdebt-api.onrender.com/api/bonds?limit=1000')
         const data = await response.json()
-        const allBonds = data.bonds || []
+        const allBonds = data.items || data.bonds || []
         setBonds(allBonds)
 
         // Calculate metrics
