@@ -13,6 +13,7 @@ const Sidebar: React.FC = () => {
     { href: '/analytics', label: 'Analytics', icon: '📈' },
     { href: '/spreads-trends', label: 'Spreads & Trends', icon: '📉' },
     { href: '/analytics-advanced', label: 'Advanced Analytics', icon: '🔬' },
+    { href: '/liability-management', label: 'Liabilities', icon: '💰' },
     { href: '/issuers', label: 'Issuers', icon: '🏦' },
     { href: '/bonds', label: 'Bonds', icon: '📋' },
     { href: '/tools', label: 'Tools', icon: '🛠️' },
