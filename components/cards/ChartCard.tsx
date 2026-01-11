@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
 interface ChartCardProps {
   title: string
@@ -21,56 +22,69 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, type }) => {
         setError(null)
 
         if (title === 'Issuance by Issuer') {
-          const response = await fetch(`${apiUrl}/api/bonds/?limit=100`)
+          const response = await fetch(`${apiUrl}/api/bonds?limit=100`)
           const bondsData = await response.json()
-          const bonds = bondsData.items || []
+          const bonds = bondsData.bonds || []
 
           const issuerMap: { [key: string]: number } = {}
           bonds.forEach((bond: any) => {
-            const issuer = bond.issuer?.name || 'Unknown'
+            const issuer = bond.issuer_name || 'Unknown'
             issuerMap[issuer] = (issuerMap[issuer] || 0) + bond.size
           })
 
-          const issuers = Object.keys(issuerMap).sort((a, b) => issuerMap[b] - issuerMap[a])
-          setData({ issuers, sizes: issuers.map(i => issuerMap[i]) })
+          const chartData = Object.entries(issuerMap).map(([name, value]) => ({
+            name,
+            value: parseFloat(value.toFixed(2))
+          }))
+          setData(chartData)
         } else if (title === 'Spread Distribution') {
-          const response = await fetch(`${apiUrl}/api/bonds/?limit=100`)
+          const response = await fetch(`${apiUrl}/api/bonds?limit=100`)
           const bondsData = await response.json()
-          const bonds = bondsData.items || []
+          const bonds = bondsData.bonds || []
           const spreads = bonds.map((bond: any) => bond.spread).sort((a: number, b: number) => a - b)
           
           // Create buckets
-          const min = spreads[0] || 0
-          const max = spreads[spreads.length - 1] || 1000
-          const bucketSize = (max - min) / 10
+          const min = Math.floor(spreads[0] || 0)
+          const max = Math.ceil(spreads[spreads.length - 1] || 1000)
+          const bucketSize = Math.ceil((max - min) / 10)
           const buckets: { [key: string]: number } = {}
           
           spreads.forEach((spread: number) => {
             const bucketIndex = Math.floor((spread - min) / bucketSize)
-            const bucketKey = `${(min + bucketIndex * bucketSize).toFixed(0)}-${(min + (bucketIndex + 1) * bucketSize).toFixed(0)}`
+            const bucketStart = min + bucketIndex * bucketSize
+            const bucketEnd = bucketStart + bucketSize
+            const bucketKey = `${bucketStart}-${bucketEnd}`
             buckets[bucketKey] = (buckets[bucketKey] || 0) + 1
           })
-          
-          setData({ buckets })
+
+          const chartData = Object.entries(buckets).map(([range, count]) => ({
+            range,
+            count
+          }))
+          setData(chartData)
         } else if (title === 'Issuance Trend') {
-          const response = await fetch(`${apiUrl}/api/bonds/?limit=100`)
+          const response = await fetch(`${apiUrl}/api/bonds?limit=100`)
           const bondsData = await response.json()
-          const bonds = bondsData.items || []
+          const bonds = bondsData.bonds || []
+          
+          // Sort by pricing date and calculate cumulative
+          const sortedBonds = bonds.sort((a: any, b: any) => 
+            new Date(a.pricing_date).getTime() - new Date(b.pricing_date).getTime()
+          )
 
-          const dateMap: { [key: string]: number } = {}
-          bonds.forEach((bond: any) => {
-            const date = bond.pricing_date?.split('T')[0] || 'Unknown'
-            dateMap[date] = (dateMap[date] || 0) + bond.size
+          let cumulative = 0
+          const chartData = sortedBonds.map((bond: any) => {
+            cumulative += bond.size
+            return {
+              date: new Date(bond.pricing_date).toLocaleDateString(),
+              cumulative: parseFloat(cumulative.toFixed(2))
+            }
           })
-
-          const dates = Object.keys(dateMap).sort()
-          const cumulative = dates.map((_, i) => dates.slice(0, i + 1).reduce((sum, d) => sum + dateMap[d], 0))
-
-          setData({ dates, cumulative })
+          setData(chartData)
         } else if (title === 'Issue Type Breakdown') {
-          const response = await fetch(`${apiUrl}/api/bonds/?limit=100`)
+          const response = await fetch(`${apiUrl}/api/bonds?limit=100`)
           const bondsData = await response.json()
-          const bonds = bondsData.items || []
+          const bonds = bondsData.bonds || []
 
           const typeMap: { [key: string]: number } = {}
           bonds.forEach((bond: any) => {
@@ -78,14 +92,15 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, type }) => {
             typeMap[type] = (typeMap[type] || 0) + bond.size
           })
 
-          const types = Object.keys(typeMap)
-          const sizes = types.map(type => typeMap[type])
-
-          setData({ types, sizes })
+          const chartData = Object.entries(typeMap).map(([name, value]) => ({
+            name,
+            value: parseFloat(value.toFixed(2))
+          }))
+          setData(chartData)
         }
       } catch (err) {
         console.error('Error fetching chart data:', err)
-        setError('Failed to load data')
+        setError('Failed to load chart data')
       } finally {
         setLoading(false)
       }
@@ -94,84 +109,87 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, type }) => {
     fetchChartData()
   }, [title, apiUrl])
 
-  return (
-    <div className="card">
-      <div className="card-header">
-        <h3 className="text-lg font-semibold text-primary-900">{title}</h3>
+  if (loading) {
+    return (
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">{title}</h3>
+        <div className="h-80 flex items-center justify-center">
+          <p className="text-gray-500">Loading chart...</p>
+        </div>
       </div>
-      <div className="card-body">
-        {loading ? (
-          <div className="h-64 bg-gradient-to-br from-gray-50 to-gray-100 rounded flex items-center justify-center">
-            <p className="text-gray-500">Loading data...</p>
-          </div>
-        ) : error ? (
-          <div className="h-64 bg-red-50 rounded flex items-center justify-center">
-            <p className="text-red-600">{error}</p>
-          </div>
-        ) : title === 'Issuance by Issuer' && data.issuers ? (
-          <div className="space-y-2">
-            {data.issuers.map((issuer: string, idx: number) => (
-              <div key={issuer} className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-700">{issuer}</span>
-                <div className="flex items-center gap-2 flex-1 ml-4">
-                  <div className="bg-blue-200 h-6 rounded" style={{ width: `${(data.sizes[idx] / Math.max(...data.sizes)) * 100}%` }}></div>
-                  <span className="text-sm text-gray-600 w-16 text-right">€{data.sizes[idx]}M</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : title === 'Spread Distribution' && data.buckets ? (
-          <div className="space-y-2">
-            {Object.entries(data.buckets).map(([bucket, count]: [string, any]) => (
-              <div key={bucket} className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-700">{bucket} bps</span>
-                <div className="flex items-center gap-2 flex-1 ml-4">
-                  <div className="bg-purple-200 h-6 rounded" style={{ width: `${(count / Math.max(...Object.values(data.buckets as any).map(Number))) * 100}%` }}></div>
-                  <span className="text-sm text-gray-600 w-8 text-right">{count}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : title === 'Issuance Trend' && data.dates ? (
-          <div className="text-sm text-gray-600">
-            <p className="mb-3">Cumulative Issuance Over Time</p>
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left py-2">Date</th>
-                  <th className="text-right py-2">Cumulative (€M)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.dates.map((date: string, idx: number) => (
-                  <tr key={date} className="border-b">
-                    <td className="py-2">{date}</td>
-                    <td className="text-right">{data.cumulative[idx].toFixed(0)}</td>
-                  </tr>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">{title}</h3>
+        <div className="h-80 flex items-center justify-center">
+          <p className="text-red-500">{error}</p>
+        </div>
+      </div>
+    )
+  }
+
+  const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#06b6d4', '#f97316', '#ef4444']
+
+  return (
+    <div className="bg-white rounded-lg shadow-md p-6">
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">{title}</h3>
+      <div className="h-80">
+        {type === 'bar' && title === 'Issuance by Issuer' && (
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip formatter={(value) => `€${value}M`} />
+              <Bar dataKey="value" fill="#3b82f6" />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
+        {type === 'histogram' && title === 'Spread Distribution' && (
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="range" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="count" fill="#8b5cf6" />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
+        {type === 'line' && title === 'Issuance Trend' && (
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip formatter={(value) => `€${value}M`} />
+              <Line type="monotone" dataKey="cumulative" stroke="#10b981" strokeWidth={2} />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
+        {type === 'pie' && title === 'Issue Type Breakdown' && (
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={({ name, value }) => `${name}: €${value}M`}
+                outerRadius={100}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {COLORS.map((color, index) => (
+                  <Cell key={`cell-${index}`} fill={color} />
                 ))}
-              </tbody>
-            </table>
-          </div>
-        ) : title === 'Issue Type Breakdown' && data.types ? (
-          <div className="space-y-2">
-            {data.types.map((type: string, idx: number) => {
-              const total = data.sizes.reduce((a: number, b: number) => a + b, 0)
-              const percentage = ((data.sizes[idx] / total) * 100).toFixed(1)
-              return (
-                <div key={type} className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-700">{type}</span>
-                  <div className="flex items-center gap-2 flex-1 ml-4">
-                    <div className="bg-green-200 h-6 rounded" style={{ width: `${(data.sizes[idx] / Math.max(...data.sizes)) * 100}%` }}></div>
-                    <span className="text-sm text-gray-600 w-20 text-right">{percentage}% (€{data.sizes[idx]}M)</span>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        ) : (
-          <div className="h-64 bg-gradient-to-br from-gray-50 to-gray-100 rounded flex items-center justify-center">
-            <p className="text-gray-500">No data available</p>
-          </div>
+              </Pie>
+              <Tooltip formatter={(value) => `€${value}M`} />
+            </PieChart>
+          </ResponsiveContainer>
         )}
       </div>
     </div>
