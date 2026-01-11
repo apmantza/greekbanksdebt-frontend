@@ -24,7 +24,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, type }) => {
         if (title === 'Issuance by Issuer') {
           const response = await fetch(`${apiUrl}/api/bonds?limit=100`)
           const bondsData = await response.json()
-          const bonds = bondsData.bonds || []
+          const bonds = bondsData.items || bondsData.bonds || []
 
           const issuerMap: { [key: string]: number } = {}
           bonds.forEach((bond: any) => {
@@ -40,7 +40,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, type }) => {
         } else if (title === 'Spread Distribution') {
           const response = await fetch(`${apiUrl}/api/bonds?limit=100`)
           const bondsData = await response.json()
-          const bonds = bondsData.bonds || []
+          const bonds = bondsData.items || bondsData.bonds || []
           const spreads = bonds.map((bond: any) => bond.spread).sort((a: number, b: number) => a - b)
           
           // Create buckets
@@ -65,7 +65,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, type }) => {
         } else if (title === 'Issuance Trend') {
           const response = await fetch(`${apiUrl}/api/bonds?limit=100`)
           const bondsData = await response.json()
-          const bonds = bondsData.bonds || []
+          const bonds = bondsData.items || bondsData.bonds || []
           
           // Sort by pricing date and calculate cumulative
           const sortedBonds = bonds.sort((a: any, b: any) => 
@@ -84,7 +84,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, type }) => {
         } else if (title === 'Issue Type Breakdown') {
           const response = await fetch(`${apiUrl}/api/bonds?limit=100`)
           const bondsData = await response.json()
-          const bonds = bondsData.bonds || []
+          const bonds = bondsData.items || bondsData.bonds || []
 
           const typeMap: { [key: string]: number } = {}
           bonds.forEach((bond: any) => {
