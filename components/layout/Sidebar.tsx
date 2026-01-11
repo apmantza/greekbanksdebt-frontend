@@ -1,1 +1,74 @@
-'use client'\n\nimport React, { useState } from 'react'\nimport Link from 'next/link'\nimport { usePathname } from 'next/navigation'\n\nconst Sidebar: React.FC = () => {\n  const pathname = usePathname()\n  const [isOpen, setIsOpen] = useState(true)\n\n  const menuItems = [\n    { href: '/dashboard', label: 'Dashboard', icon: '📊' },\n    { href: '/analytics', label: 'Analytics', icon: '📈' },\n    { href: '/issuers', label: 'Issuers', icon: '🏦' },\n    { href: '/bonds', label: 'Bonds', icon: '📋' },\n    { href: '/tools', label: 'Tools', icon: '🛠️' },\n    { href: '/olympus', label: 'Mount Olympus', icon: '⛰️' },\n  ]\n\n  const isActive = (href: string) => pathname.startsWith(href)\n\n  return (\n    <aside className={`${isOpen ? 'w-64' : 'w-20'} bg-primary-900 text-white transition-all duration-300 flex flex-col`}>\n      {/* Logo */}\n      <div className=\"p-4 border-b border-primary-800\">\n        <div className=\"flex items-center justify-between\">\n          {isOpen && (\n            <div className=\"flex items-center gap-2\">\n              <div className=\"w-8 h-8 bg-accent-500 rounded-lg flex items-center justify-center font-bold\">Ω</div>\n              <span className=\"font-bold text-sm\">GBD</span>\n            </div>\n          )}\n          <button\n            onClick={() => setIsOpen(!isOpen)}\n            className=\"p-1 hover:bg-primary-800 rounded transition-colors\"\n          >\n            {isOpen ? '←' : '→'}\n          </button>\n        </div>\n      </div>\n\n      {/* Navigation */}\n      <nav className=\"flex-1 px-2 py-4 space-y-2 overflow-y-auto\">\n        {menuItems.map((item) => (\n          <Link\n            key={item.href}\n            href={item.href}\n            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${\n              isActive(item.href)\n                ? 'bg-accent-500 text-white'\n                : 'text-gray-300 hover:bg-primary-800'\n            }`}\n          >\n            <span className=\"text-lg\">{item.icon}</span>\n            {isOpen && <span className=\"text-sm font-medium\">{item.label}</span>}\n          </Link>\n        ))}\n      </nav>\n\n      {/* Footer */}\n      <div className=\"p-4 border-t border-primary-800\">\n        {isOpen && (\n          <div className=\"text-xs text-gray-400\">\n            <p className=\"font-semibold text-white mb-2\">Greek Banks</p>\n            <p>Debt Dashboard v1.0</p>\n          </div>\n        )}\n      </div>\n    </aside>\n  )\n}\n\nexport default Sidebar\n
+'use client'
+
+import React, { useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+
+const Sidebar: React.FC = () => {
+  const pathname = usePathname()
+  const [isOpen, setIsOpen] = useState(true)
+
+  const menuItems = [
+    { href: '/dashboard', label: 'Dashboard', icon: '📊' },
+    { href: '/analytics', label: 'Analytics', icon: '📈' },
+    { href: '/issuers', label: 'Issuers', icon: '🏦' },
+    { href: '/bonds', label: 'Bonds', icon: '📋' },
+    { href: '/tools', label: 'Tools', icon: '🛠️' },
+    { href: '/olympus', label: 'Mount Olympus', icon: '⛰️' },
+  ]
+
+  const isActive = (href: string) => pathname.startsWith(href)
+
+  return (
+    <aside className={`${isOpen ? 'w-64' : 'w-20'} bg-primary-900 text-white transition-all duration-300 flex flex-col`}>
+      {/* Logo */}
+      <div className=\"p-4 border-b border-primary-800\">
+        <div className=\"flex items-center justify-between\">
+          {isOpen && (
+            <div className=\"flex items-center gap-2\">
+              <div className=\"w-8 h-8 bg-accent-500 rounded-lg flex items-center justify-center font-bold\">Ω</div>
+              <span className=\"font-bold text-sm\">GBD</span>
+            </div>
+          )}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className=\"p-1 hover:bg-primary-800 rounded transition-colors\"
+          >
+            {isOpen ? '←' : '→'}
+          </button>
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <nav className=\"flex-1 px-2 py-4 space-y-2 overflow-y-auto\">
+        {menuItems.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+              isActive(item.href)
+                ? 'bg-accent-500 text-white'
+                : 'text-gray-300 hover:bg-primary-800'
+            }`}
+          >
+            <span className=\"text-lg\">{item.icon}</span>
+            {isOpen && <span className=\"text-sm font-medium\">{item.label}</span>}
+          </Link>
+        ))}
+      </nav>
+
+      {/* Footer */}
+      <div className=\"p-4 border-t border-primary-800\">
+        {isOpen && (
+          <div className=\"text-xs text-gray-400\">
+            <p className=\"font-semibold text-white mb-2\">Greek Banks</p>
+            <p>Debt Dashboard v1.0</p>
+          </div>
+        )}
+      </div>
+    </aside>
+  )
+}
+
+export default Sidebar
+

@@ -1,1 +1,39 @@
-'use client'\n\nimport React from 'react'\n\ninterface KPICardProps {\n  label: string\n  value: string\n  change: string\n  trend: 'up' | 'down' | 'neutral'\n}\n\nconst KPICard: React.FC<KPICardProps> = ({ label, value, change, trend }) => {\n  const trendColor = {\n    up: 'text-status-success',\n    down: 'text-status-error',\n    neutral: 'text-gray-500',\n  }[trend]\n\n  const trendIcon = {\n    up: '↑',\n    down: '↓',\n    neutral: '→',\n  }[trend]\n\n  return (\n    <div className=\"card\">\n      <div className=\"card-body\">\n        <p className=\"text-sm text-gray-600 font-medium\">{label}</p>\n        <p className=\"text-2xl font-bold text-primary-900 mt-2\">{value}</p>\n        <p className={`text-sm mt-2 ${trendColor}`}>\n          <span>{trendIcon}</span> {change}\n        </p>\n      </div>\n    </div>\n  )\n}\n\nexport default KPICard\n
+'use client'
+
+import React from 'react'
+
+interface KPICardProps {
+  label: string
+  value: string
+  change: string
+  trend: 'up' | 'down' | 'neutral'
+}
+
+const KPICard: React.FC<KPICardProps> = ({ label, value, change, trend }) => {
+  const trendColor = {
+    up: 'text-status-success',
+    down: 'text-status-error',
+    neutral: 'text-gray-500',
+  }[trend]
+
+  const trendIcon = {
+    up: '↑',
+    down: '↓',
+    neutral: '→',
+  }[trend]
+
+  return (
+    <div className=\"card\">
+      <div className=\"card-body\">
+        <p className=\"text-sm text-gray-600 font-medium\">{label}</p>
+        <p className=\"text-2xl font-bold text-primary-900 mt-2\">{value}</p>
+        <p className={`text-sm mt-2 ${trendColor}`}>
+          <span>{trendIcon}</span> {change}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+export default KPICard
+

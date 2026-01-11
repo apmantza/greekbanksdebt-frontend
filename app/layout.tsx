@@ -1,1 +1,33 @@
-import type { Metadata } from 'next'\nimport './globals.css'\nimport Header from '@/components/layout/Header'\nimport Sidebar from '@/components/layout/Sidebar'\n\nexport const metadata: Metadata = {\n  title: 'Greek Banks Debt Dashboard',\n  description: 'Interactive dashboard for Greek banks debt issuance analysis',\n  viewport: 'width=device-width, initial-scale=1',\n}\n\nexport default function RootLayout({\n  children,\n}: {\n  children: React.ReactNode\n}) {\n  return (\n    <html lang=\"en\">\n      <body>\n        <div className=\"flex h-screen bg-gray-50\">\n          <Sidebar />\n          <div className=\"flex-1 flex flex-col overflow-hidden\">\n            <Header />\n            <main className=\"flex-1 overflow-auto\">\n              {children}\n            </main>\n          </div>\n        </div>\n      </body>\n    </html>\n  )\n}\n
+import type { Metadata } from 'next'
+import './globals.css'
+import Header from '@/components/layout/Header'
+import Sidebar from '@/components/layout/Sidebar'
+
+export const metadata: Metadata = {
+  title: 'Greek Banks Debt Dashboard',
+  description: 'Interactive dashboard for Greek banks debt issuance analysis',
+  viewport: 'width=device-width, initial-scale=1',
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang=\"en\">
+      <body>
+        <div className=\"flex h-screen bg-gray-50\">
+          <Sidebar />
+          <div className=\"flex-1 flex flex-col overflow-hidden\">
+            <Header />
+            <main className=\"flex-1 overflow-auto\">
+              {children}
+            </main>
+          </div>
+        </div>
+      </body>
+    </html>
+  )
+}
+

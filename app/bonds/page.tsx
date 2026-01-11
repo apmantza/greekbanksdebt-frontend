@@ -1,1 +1,167 @@
-'use client'\n\nimport React, { useState } from 'react'\n\nconst BondsPage: React.FC = () => {\n  const [sortBy, setSortBy] = useState('spread')\n  const [filterType, setFilterType] = useState('all')\n\n  const bonds = [\n    {\n      id: 1,\n      issuer: 'Eurobank',\n      type: 'SR Preferred',\n      spread: 245,\n      coupon: 3.5,\n      tenor: 5,\n      size: '€500M',\n      pricing_date: '2024-01-15',\n      esg: true,\n    },\n    {\n      id: 2,\n      issuer: 'Piraeus',\n      type: 'Tier 2',\n      spread: 380,\n      coupon: 4.8,\n      tenor: 7,\n      size: '€400M',\n      pricing_date: '2024-01-10',\n      esg: false,\n    },\n    {\n      id: 3,\n      issuer: 'Alpha',\n      type: 'AT1',\n      spread: 520,\n      coupon: 6.2,\n      tenor: 99,\n      size: '€300M',\n      pricing_date: '2024-01-05',\n      esg: false,\n    },\n    {\n      id: 4,\n      issuer: 'NBG',\n      type: 'SR Preferred',\n      spread: 265,\n      coupon: 3.8,\n      tenor: 5,\n      size: '€350M',\n      pricing_date: '2023-12-20',\n      esg: true,\n    },\n  ]\n\n  const filteredBonds = bonds.filter((bond) => {\n    if (filterType === 'all') return true\n    return bond.type === filterType\n  })\n\n  const sortedBonds = [...filteredBonds].sort((a, b) => {\n    if (sortBy === 'spread') return a.spread - b.spread\n    if (sortBy === 'coupon') return b.coupon - a.coupon\n    if (sortBy === 'tenor') return a.tenor - b.tenor\n    return 0\n  })\n\n  return (\n    <div className=\"p-6 space-y-6\">\n      {/* Header */}\n      <div>\n        <h1 className=\"text-3xl font-bold text-primary-900\">Bonds</h1>\n        <p className=\"text-gray-600 mt-1\">Complete bond inventory and details</p>\n      </div>\n\n      {/* Filters */}\n      <div className=\"card\">\n        <div className=\"card-body\">\n          <div className=\"grid grid-cols-1 md:grid-cols-3 gap-4\">\n            <div>\n              <label className=\"block text-sm font-medium text-gray-700 mb-2\">Issue Type</label>\n              <select\n                value={filterType}\n                onChange={(e) => setFilterType(e.target.value)}\n                className=\"input\"\n              >\n                <option value=\"all\">All Types</option>\n                <option value=\"SR Preferred\">SR Preferred</option>\n                <option value=\"Tier 2\">Tier 2</option>\n                <option value=\"AT1\">AT1</option>\n              </select>\n            </div>\n            <div>\n              <label className=\"block text-sm font-medium text-gray-700 mb-2\">Sort By</label>\n              <select\n                value={sortBy}\n                onChange={(e) => setSortBy(e.target.value)}\n                className=\"input\"\n              >\n                <option value=\"spread\">Spread (Low to High)</option>\n                <option value=\"coupon\">Coupon (High to Low)</option>\n                <option value=\"tenor\">Tenor (Short to Long)</option>\n              </select>\n            </div>\n            <div className=\"flex items-end\">\n              <button className=\"btn btn-primary w-full\">Export to CSV</button>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      {/* Bonds Table */}\n      <div className=\"card\">\n        <div className=\"card-header\">\n          <h2 className=\"text-lg font-semibold text-primary-900\">Bonds ({sortedBonds.length})</h2>\n        </div>\n        <div className=\"card-body\">\n          <div className=\"overflow-x-auto\">\n            <table className=\"w-full text-sm\">\n              <thead>\n                <tr className=\"border-b border-gray-200\">\n                  <th className=\"text-left py-3 px-4 font-semibold text-gray-700\">Issuer</th>\n                  <th className=\"text-left py-3 px-4 font-semibold text-gray-700\">Type</th>\n                  <th className=\"text-left py-3 px-4 font-semibold text-gray-700\">Spread</th>\n                  <th className=\"text-left py-3 px-4 font-semibold text-gray-700\">Coupon</th>\n                  <th className=\"text-left py-3 px-4 font-semibold text-gray-700\">Tenor</th>\n                  <th className=\"text-left py-3 px-4 font-semibold text-gray-700\">Size</th>\n                  <th className=\"text-left py-3 px-4 font-semibold text-gray-700\">ESG</th>\n                  <th className=\"text-left py-3 px-4 font-semibold text-gray-700\">Action</th>\n                </tr>\n              </thead>\n              <tbody>\n                {sortedBonds.map((bond) => (\n                  <tr key={bond.id} className=\"border-b border-gray-100 hover:bg-gray-50\">\n                    <td className=\"py-3 px-4 font-semibold\">{bond.issuer}</td>\n                    <td className=\"py-3 px-4\">\n                      <span className=\"badge badge-info\">{bond.type}</span>\n                    </td>\n                    <td className=\"py-3 px-4\">\n                      <span className=\"font-semibold text-accent-600\">{bond.spread} bps</span>\n                    </td>\n                    <td className=\"py-3 px-4\">{bond.coupon.toFixed(2)}%</td>\n                    <td className=\"py-3 px-4\">{bond.tenor}Y</td>\n                    <td className=\"py-3 px-4\">{bond.size}</td>\n                    <td className=\"py-3 px-4\">\n                      {bond.esg ? (\n                        <span className=\"badge badge-success\">✓ Green</span>\n                      ) : (\n                        <span className=\"text-gray-400\">-</span>\n                      )}\n                    </td>\n                    <td className=\"py-3 px-4\">\n                      <button className=\"text-accent-600 hover:text-accent-700 font-medium\">View →</button>\n                    </td>\n                  </tr>\n                ))}\n              </tbody>\n            </table>\n          </div>\n        </div>\n      </div>\n    </div>\n  )\n}\n\nexport default BondsPage\n
+'use client'
+
+import React, { useState } from 'react'
+
+const BondsPage: React.FC = () => {
+  const [sortBy, setSortBy] = useState('spread')
+  const [filterType, setFilterType] = useState('all')
+
+  const bonds = [
+    {
+      id: 1,
+      issuer: 'Eurobank',
+      type: 'SR Preferred',
+      spread: 245,
+      coupon: 3.5,
+      tenor: 5,
+      size: '€500M',
+      pricing_date: '2024-01-15',
+      esg: true,
+    },
+    {
+      id: 2,
+      issuer: 'Piraeus',
+      type: 'Tier 2',
+      spread: 380,
+      coupon: 4.8,
+      tenor: 7,
+      size: '€400M',
+      pricing_date: '2024-01-10',
+      esg: false,
+    },
+    {
+      id: 3,
+      issuer: 'Alpha',
+      type: 'AT1',
+      spread: 520,
+      coupon: 6.2,
+      tenor: 99,
+      size: '€300M',
+      pricing_date: '2024-01-05',
+      esg: false,
+    },
+    {
+      id: 4,
+      issuer: 'NBG',
+      type: 'SR Preferred',
+      spread: 265,
+      coupon: 3.8,
+      tenor: 5,
+      size: '€350M',
+      pricing_date: '2023-12-20',
+      esg: true,
+    },
+  ]
+
+  const filteredBonds = bonds.filter((bond) => {
+    if (filterType === 'all') return true
+    return bond.type === filterType
+  })
+
+  const sortedBonds = [...filteredBonds].sort((a, b) => {
+    if (sortBy === 'spread') return a.spread - b.spread
+    if (sortBy === 'coupon') return b.coupon - a.coupon
+    if (sortBy === 'tenor') return a.tenor - b.tenor
+    return 0
+  })
+
+  return (
+    <div className=\"p-6 space-y-6\">
+      {/* Header */}
+      <div>
+        <h1 className=\"text-3xl font-bold text-primary-900\">Bonds</h1>
+        <p className=\"text-gray-600 mt-1\">Complete bond inventory and details</p>
+      </div>
+
+      {/* Filters */}
+      <div className=\"card\">
+        <div className=\"card-body\">
+          <div className=\"grid grid-cols-1 md:grid-cols-3 gap-4\">
+            <div>
+              <label className=\"block text-sm font-medium text-gray-700 mb-2\">Issue Type</label>
+              <select
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                className=\"input\"
+              >
+                <option value=\"all\">All Types</option>
+                <option value=\"SR Preferred\">SR Preferred</option>
+                <option value=\"Tier 2\">Tier 2</option>
+                <option value=\"AT1\">AT1</option>
+              </select>
+            </div>
+            <div>
+              <label className=\"block text-sm font-medium text-gray-700 mb-2\">Sort By</label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className=\"input\"
+              >
+                <option value=\"spread\">Spread (Low to High)</option>
+                <option value=\"coupon\">Coupon (High to Low)</option>
+                <option value=\"tenor\">Tenor (Short to Long)</option>
+              </select>
+            </div>
+            <div className=\"flex items-end\">
+              <button className=\"btn btn-primary w-full\">Export to CSV</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bonds Table */}
+      <div className=\"card\">
+        <div className=\"card-header\">
+          <h2 className=\"text-lg font-semibold text-primary-900\">Bonds ({sortedBonds.length})</h2>
+        </div>
+        <div className=\"card-body\">
+          <div className=\"overflow-x-auto\">
+            <table className=\"w-full text-sm\">
+              <thead>
+                <tr className=\"border-b border-gray-200\">
+                  <th className=\"text-left py-3 px-4 font-semibold text-gray-700\">Issuer</th>
+                  <th className=\"text-left py-3 px-4 font-semibold text-gray-700\">Type</th>
+                  <th className=\"text-left py-3 px-4 font-semibold text-gray-700\">Spread</th>
+                  <th className=\"text-left py-3 px-4 font-semibold text-gray-700\">Coupon</th>
+                  <th className=\"text-left py-3 px-4 font-semibold text-gray-700\">Tenor</th>
+                  <th className=\"text-left py-3 px-4 font-semibold text-gray-700\">Size</th>
+                  <th className=\"text-left py-3 px-4 font-semibold text-gray-700\">ESG</th>
+                  <th className=\"text-left py-3 px-4 font-semibold text-gray-700\">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sortedBonds.map((bond) => (
+                  <tr key={bond.id} className=\"border-b border-gray-100 hover:bg-gray-50\">
+                    <td className=\"py-3 px-4 font-semibold\">{bond.issuer}</td>
+                    <td className=\"py-3 px-4\">
+                      <span className=\"badge badge-info\">{bond.type}</span>
+                    </td>
+                    <td className=\"py-3 px-4\">
+                      <span className=\"font-semibold text-accent-600\">{bond.spread} bps</span>
+                    </td>
+                    <td className=\"py-3 px-4\">{bond.coupon.toFixed(2)}%</td>
+                    <td className=\"py-3 px-4\">{bond.tenor}Y</td>
+                    <td className=\"py-3 px-4\">{bond.size}</td>
+                    <td className=\"py-3 px-4\">
+                      {bond.esg ? (
+                        <span className=\"badge badge-success\">✓ Green</span>
+                      ) : (
+                        <span className=\"text-gray-400\">-</span>
+                      )}
+                    </td>
+                    <td className=\"py-3 px-4\">
+                      <button className=\"text-accent-600 hover:text-accent-700 font-medium\">View →</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default BondsPage
+
