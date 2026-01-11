@@ -1,0 +1,1 @@
+# Dependencies\nnode_modules/\n.pnp\n.pnp.js\n\n# Testing\n.nyc_output\ncoverage\n\n# Next.js\n.next/\nout/\nbuild/\n\n# Environment variables\n.env\n.env.local\n.env.development.local\n.env.test.local\n.env.production.local\n\n# IDE\n.vscode/\n.idea/\n*.swp\n*.swo\n*~\n.DS_Store\n\n# Logs\nlogs\n*.log\nnpm-debug.log*\nyarn-debug.log*\nyarn-error.log*\n\n# OS\nThumbs.db\n
