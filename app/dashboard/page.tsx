@@ -6,11 +6,11 @@ import ChartCard from '@/components/cards/ChartCard'
 
 const DashboardPage: React.FC = () => {
   // Mock data - will be replaced with real API calls
-  const kpis = [
-    { label: 'Total Issuance', value: '€26.6B', change: '+5.2%', trend: 'up' },
-    { label: 'Avg Spread', value: '382 bps', change: '-120 bps', trend: 'down' },
-    { label: 'Active Bonds', value: '55', change: '+3', trend: 'up' },
-    { label: 'Top Issuer', value: 'Eurobank', change: '30%', trend: 'neutral' },
+  const kpis: Array<{ label: string; value: string; change: string; trend: 'up' | 'down' | 'neutral' }> = [
+    { label: 'Total Issuance', value: '€26.6B', change: '+5.2%', trend: 'up' as const },
+    { label: 'Avg Spread', value: '382 bps', change: '-120 bps', trend: 'down' as const },
+    { label: 'Active Bonds', value: '55', change: '+3', trend: 'up' as const },
+    { label: 'Top Issuer', value: 'Eurobank', change: '30%', trend: 'neutral' as const },
   ]
 
   return (
