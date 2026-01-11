@@ -11,6 +11,8 @@ const Sidebar: React.FC = () => {
   const menuItems = [
     { href: '/dashboard', label: 'Dashboard', icon: '📊' },
     { href: '/analytics', label: 'Analytics', icon: '📈' },
+    { href: '/spreads-trends', label: 'Spreads & Trends', icon: '📉' },
+    { href: '/analytics-advanced', label: 'Advanced Analytics', icon: '🔬' },
     { href: '/issuers', label: 'Issuers', icon: '🏦' },
     { href: '/bonds', label: 'Bonds', icon: '📋' },
     { href: '/tools', label: 'Tools', icon: '🛠️' },
