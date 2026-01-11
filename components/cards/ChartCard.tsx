@@ -126,7 +126,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, type }) => {
               <div key={bucket} className="flex items-center justify-between">
                 <span className="text-sm font-medium text-gray-700">{bucket} bps</span>
                 <div className="flex items-center gap-2 flex-1 ml-4">
-                  <div className="bg-purple-200 h-6 rounded" style={{ width: `${(count / Math.max(...Object.values(data.buckets as any))) * 100}%` }}></div>
+                  <div className="bg-purple-200 h-6 rounded" style={{ width: `${(count / Math.max(...Object.values(data.buckets as any).map(Number))) * 100}%` }}></div>
                   <span className="text-sm text-gray-600 w-8 text-right">{count}</span>
                 </div>
               </div>
