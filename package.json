@@ -1,1 +1,37 @@
-{\n  "name": "greekbanksdebt-website",\n  "version": "1.0.0",\n  "description": "Greek Banks Debt Dashboard - Modern Website",\n  "private": true,\n  "scripts": {\n    "dev": "next dev",\n    "build": "next build",\n    "start": "next start",\n    "lint": "next lint",\n    "type-check": "tsc --noEmit"\n  },\n  "dependencies": {\n    "react": "^18.2.0",\n    "react-dom": "^18.2.0",\n    "next": "^14.0.0",\n    "plotly.js": "^2.26.0",\n    "react-plotly.js": "^4.4.0",\n    "axios": "^1.6.0",\n    "zustand": "^4.4.0",\n    "react-query": "^3.39.0",\n    "date-fns": "^2.30.0",\n    "clsx": "^2.0.0",\n    "tailwind-merge": "^2.2.0"\n  },\n  "devDependencies": {\n    "typescript": "^5.3.0",\n    "@types/react": "^18.2.0",\n    "@types/react-dom": "^18.2.0",\n    "@types/node": "^20.0.0",\n    "tailwindcss": "^3.3.0",\n    "postcss": "^8.4.0",\n    "autoprefixer": "^10.4.0",\n    "eslint": "^8.50.0",\n    "eslint-config-next": "^14.0.0"\n  }\n}\n
+{
+  "name": "greekbanksdebt-website",
+  "version": "1.0.0",
+  "description": "Greek Banks Debt Dashboard - Modern Website",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "next": "^14.0.0",
+    "plotly.js": "^2.26.0",
+    "react-plotly.js": "^4.4.0",
+    "axios": "^1.6.0",
+    "zustand": "^4.4.0",
+    "react-query": "^3.39.0",
+    "date-fns": "^2.30.0",
+    "clsx": "^2.0.0",
+    "tailwind-merge": "^2.2.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/node": "^20.0.0",
+    "tailwindcss": "^3.3.0",
+    "postcss": "^8.4.0",
+    "autoprefixer": "^10.4.0",
+    "eslint": "^8.50.0",
+    "eslint-config-next": "^14.0.0"
+  }
+}
