@@ -31,31 +31,54 @@ const ScatterChartComponent: React.FC<ScatterChartProps> = ({ title, xAxisLabel,
 
         if (dataType === 'spread-vs-tenor') {
           chartData = bonds
-            .filter((bond: any) => bond.spread && bond.tenor)
-            .map((bond: any) => ({
-              tenor: bond.tenor,
-              spread: bond.spread,
-              issuer: bond.issuer?.name || bond.issuer_name || 'Unknown',
-              coupon: bond.coupon,
-            }))
+            .filter((bond: any) => bond.spread && bond.maturity_date && bond.pricing_date)
+            .map((bond: any) => {
+              // Calculate original tenor from maturity_date - pricing_date
+              const pricingDate = new Date(bond.pricing_date)
+              const maturityDate = new Date(bond.maturity_date)
+              const originalTenor = (maturityDate.getTime() - pricingDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25)
+              
+              return {
+                tenor: parseFloat(originalTenor.toFixed(2)),
+                spread: bond.spread,
+                issuer: bond.issuer?.name || bond.issuer_name || 'Unknown',
+                coupon: bond.coupon,
+                isin: bond.isin,
+              }
+            })
+            .filter((d: any) => d.tenor > 0 && d.tenor < 50) // Filter out unrealistic tenors
         } else if (dataType === 'coupon-vs-tenor') {
           chartData = bonds
-            .filter((bond: any) => bond.coupon && bond.tenor)
-            .map((bond: any) => ({
-              tenor: bond.tenor,
-              coupon: bond.coupon,
-              issuer: bond.issuer?.name || bond.issuer_name || 'Unknown',
-              spread: bond.spread,
-            }))
+            .filter((bond: any) => bond.coupon && bond.maturity_date && bond.pricing_date)
+            .map((bond: any) => {
+              // Calculate original tenor from maturity_date - pricing_date
+              const pricingDate = new Date(bond.pricing_date)
+              const maturityDate = new Date(bond.maturity_date)
+              const originalTenor = (maturityDate.getTime() - pricingDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25)
+              
+              return {
+                tenor: parseFloat(originalTenor.toFixed(2)),
+                coupon: bond.coupon,
+                issuer: bond.issuer?.name || bond.issuer_name || 'Unknown',
+                spread: bond.spread,
+                isin: bond.isin,
+              }
+            })
+            .filter((d: any) => d.tenor > 0 && d.tenor < 50) // Filter out unrealistic tenors
         } else if (dataType === 'spread-vs-date') {
           chartData = bonds
             .filter((bond: any) => bond.spread && bond.pricing_date)
-            .map((bond: any) => ({
-              date: new Date(bond.pricing_date).getTime(),
-              spread: bond.spread,
-              issuer: bond.issuer?.name || bond.issuer_name || 'Unknown',
-              coupon: bond.coupon,
-            }))
+            .map((bond: any) => {
+              const pricingDate = new Date(bond.pricing_date)
+              return {
+                date: pricingDate.getTime(),
+                dateStr: pricingDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+                spread: bond.spread,
+                issuer: bond.issuer?.name || bond.issuer_name || 'Unknown',
+                coupon: bond.coupon,
+                isin: bond.isin,
+              }
+            })
             .sort((a: any, b: any) => a.date - b.date)
         }
 
@@ -93,6 +116,17 @@ const ScatterChartComponent: React.FC<ScatterChartProps> = ({ title, xAxisLabel,
     )
   }
 
+  if (data.length === 0) {
+    return (
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">{title}</h3>
+        <div className="h-80 flex items-center justify-center">
+          <p className="text-gray-500">No data available</p>
+        </div>
+      </div>
+    )
+  }
+
   const ISSUER_COLORS: { [key: string]: string } = {
     'Piraeus': '#3b82f6',
     'NBG': '#8b5cf6',
@@ -119,23 +153,30 @@ const ScatterChartComponent: React.FC<ScatterChartProps> = ({ title, xAxisLabel,
               }
               type={dataType === 'spread-vs-date' ? 'number' : 'number'}
               name={xAxisLabel}
-              unit={dataType === 'spread-vs-date' ? '' : ' yrs'}
+              label={{ value: xAxisLabel, position: 'insideBottomRight', offset: -5 }}
             />
             <YAxis
               dataKey={
                 dataType === 'spread-vs-tenor' ? 'spread' : dataType === 'coupon-vs-tenor' ? 'coupon' : 'spread'
               }
               name={yAxisLabel}
-              unit={dataType === 'coupon-vs-tenor' ? '%' : ' bps'}
+              label={{ value: yAxisLabel, angle: -90, position: 'insideLeft' }}
             />
             <Tooltip
               cursor={{ strokeDasharray: '3 3' }}
               formatter={(value: any, name: string) => {
-                if (name === 'tenor') return [`${value.toFixed(1)} yrs`, 'Tenor']
+                if (name === 'tenor') return [`${value.toFixed(2)} yrs`, 'Tenor']
                 if (name === 'spread') return [`${value.toFixed(1)} bps`, 'Spread']
                 if (name === 'coupon') return [`${value.toFixed(2)}%`, 'Coupon']
                 if (name === 'date') return [new Date(value).toLocaleDateString(), 'Date']
+                if (name === 'dateStr') return [value, 'Date']
                 return [value, name]
+              }}
+              labelFormatter={(label: any) => {
+                if (typeof label === 'number' && label > 1000000000) {
+                  return new Date(label).toLocaleDateString()
+                }
+                return label
               }}
             />
             <Legend />
@@ -150,6 +191,11 @@ const ScatterChartComponent: React.FC<ScatterChartProps> = ({ title, xAxisLabel,
           </ScatterChart>
         </ResponsiveContainer>
       </div>
+      <p className="text-xs text-gray-500 mt-4">
+        {dataType === 'spread-vs-tenor' && 'Original tenor calculated from maturity date minus pricing date'}
+        {dataType === 'coupon-vs-tenor' && 'Original tenor calculated from maturity date minus pricing date'}
+        {dataType === 'spread-vs-date' && 'Spread evolution over time by issuer'}
+      </p>
     </div>
   )
 }
