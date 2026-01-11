@@ -22,7 +22,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, type }) => {
         setError(null)
 
         if (title === 'Issuance by Issuer') {
-          const response = await fetch(`${apiUrl}/api/bonds?limit=100`)
+          const response = await fetch(`${apiUrl}/api/bonds/?limit=100`)
           const bondsData = await response.json()
           const bonds = bondsData.bonds || []
 
@@ -38,7 +38,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, type }) => {
           }))
           setData(chartData)
         } else if (title === 'Spread Distribution') {
-          const response = await fetch(`${apiUrl}/api/bonds?limit=100`)
+          const response = await fetch(`${apiUrl}/api/bonds/?limit=100`)
           const bondsData = await response.json()
           const bonds = bondsData.bonds || []
           const spreads = bonds.map((bond: any) => bond.spread).sort((a: number, b: number) => a - b)
@@ -63,7 +63,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, type }) => {
           }))
           setData(chartData)
         } else if (title === 'Issuance Trend') {
-          const response = await fetch(`${apiUrl}/api/bonds?limit=100`)
+          const response = await fetch(`${apiUrl}/api/bonds/?limit=100`)
           const bondsData = await response.json()
           const bonds = bondsData.bonds || []
           
@@ -82,7 +82,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, type }) => {
           })
           setData(chartData)
         } else if (title === 'Issue Type Breakdown') {
-          const response = await fetch(`${apiUrl}/api/bonds?limit=100`)
+          const response = await fetch(`${apiUrl}/api/bonds/?limit=100`)
           const bondsData = await response.json()
           const bonds = bondsData.bonds || []
 
