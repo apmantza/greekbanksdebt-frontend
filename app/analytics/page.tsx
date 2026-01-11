@@ -15,7 +15,7 @@ const AnalyticsPage: React.FC = () => {
       try {
         const response = await fetch('https://greekbanksdebt-api.onrender.com/api/bonds?limit=100')
         const data = await response.json()
-        setBonds(data.bonds || [])
+        setBonds(data.items || data.bonds || [])
       } catch (error) {
         console.error('Error fetching bonds:', error)
       } finally {
@@ -28,15 +28,17 @@ const AnalyticsPage: React.FC = () => {
 
   // Process data for charts
   const getSpreadMomentumData = () => {
-    const filtered = bonds.filter(b => 
-      (selectedIssuer === 'All Issuers' || b.issuer_name === selectedIssuer) &&
-      (selectedType === 'All Types' || b.issue_type === selectedType)
-    )
+    const filtered = bonds.filter(b => {
+      const issuerName = b.issuer?.name || b.issuer_name || 'Unknown'
+      return (selectedIssuer === 'All Issuers' || issuerName === selectedIssuer) &&
+             (selectedType === 'All Types' || b.issue_type === selectedType)
+    })
     
     const issuerData: { [key: string]: number[] } = {}
     filtered.forEach(b => {
-      if (!issuerData[b.issuer_name]) issuerData[b.issuer_name] = []
-      issuerData[b.issuer_name].push(b.spread)
+      const issuerName = b.issuer?.name || b.issuer_name || 'Unknown'
+      if (!issuerData[issuerName]) issuerData[issuerName] = []
+      issuerData[issuerName].push(b.spread)
     })
 
     return Object.entries(issuerData).map(([issuer, spreads]) => ({
@@ -46,9 +48,10 @@ const AnalyticsPage: React.FC = () => {
   }
 
   const getIssueTypeData = () => {
-    const filtered = bonds.filter(b => 
-      (selectedIssuer === 'All Issuers' || b.issuer_name === selectedIssuer)
-    )
+    const filtered = bonds.filter(b => {
+      const issuerName = b.issuer?.name || b.issuer_name || 'Unknown'
+      return (selectedIssuer === 'All Issuers' || issuerName === selectedIssuer)
+    })
     
     const typeData: { [key: string]: number } = {}
     filtered.forEach(b => {
@@ -62,10 +65,11 @@ const AnalyticsPage: React.FC = () => {
   }
 
   const getSpreadDistribution = () => {
-    const filtered = bonds.filter(b => 
-      (selectedIssuer === 'All Issuers' || b.issuer_name === selectedIssuer) &&
-      (selectedType === 'All Types' || b.issue_type === selectedType)
-    )
+    const filtered = bonds.filter(b => {
+      const issuerName = b.issuer?.name || b.issuer_name || 'Unknown'
+      return (selectedIssuer === 'All Issuers' || issuerName === selectedIssuer) &&
+             (selectedType === 'All Types' || b.issue_type === selectedType)
+    })
 
     const buckets: { [key: string]: number } = {
       '0-100': 0,
